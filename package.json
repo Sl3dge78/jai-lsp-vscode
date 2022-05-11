@@ -35,10 +35,10 @@
 			"type": "object",
 			"title": "Jai lsp client configuration",
 			"properties": {
-				"jai-lsp.path": {
+				"jai-lsp.command": {
 					"scope": "resource",
 					"type": "string",
-					"description": "Path to jai_lsp."
+					"description": "Command to run to start jai lsp"
 				}
 			}
 		},
