@@ -10,14 +10,17 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onLanguage:jai"
+		"onLanguage:jai",
+		"onCommand:jai-lsp.start",
+		"onCommand:jai-lsp.stop",
+		"onCommand:jai-lsp.restart"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
 				"command": "jai-lsp.start",
-				"title": "Hello Start Jai Lsp Server",
+				"title": "Start Jai Lsp Server",
 				"category": "jai"
 			},
 			{

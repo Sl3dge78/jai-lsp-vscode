@@ -37,18 +37,22 @@ export function activate(context: vscode.ExtensionContext) {
 
 	client.start();
 
-	vscode.commands.registerCommand("jai_lsp.start", () => {
+	const start_cmd = vscode.commands.registerCommand("jai-lsp.start", () => {
 		client.start();
 	});
+	context.subscriptions.push(start_cmd);
 
-	vscode.commands.registerCommand("jai_lsp.stop", async () => {
+	const stop_cmd = vscode.commands.registerCommand("jai-lsp.stop", async () => {
 		await client.stop();
 	});
+	context.subscriptions.push(stop_cmd);
 
-	vscode.commands.registerCommand("jai_lsp.restart", async () => {
+	const restart_cmd = vscode.commands.registerCommand("jai-lsp.restart", async () => {
 		await client.stop();
 		client.start();
 	});
+	context.subscriptions.push(restart_cmd);
+
 }
 
 // this method is called when your extension is deactivated
