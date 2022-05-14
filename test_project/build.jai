@@ -4,11 +4,11 @@
 
 build :: () {
     set_build_options_dc( .{do_output = false} );
-    w := compiler_create_workspace();
+    w := compiler_create_workspace("test program");
 
     options := get_build_options();
-    options.output_type = .NO_OUTPUT;
-    options.backend = .X64;
+    options.output_type = .EXECUTABLE;
+    //options.backend = .X64;
     set_build_options(options, w);
 
     add_build_file("main.jai", w);
