@@ -1,70 +1,65 @@
 # jai-lsp-vscode README
 
-This is the README for your extension "jai-lsp-vscode". After writing up a brief description, we recommend including the following sections.
+Support for [jai_lsp](https://github.com/Sl3dge78/jai_lsp) in vscode.
+This shouldn't evolve much as the bulk of the work is done on the server side. 
 
-## Features
+## How to
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+This extension is a small extension that will run the jai-lsp server. 
 
-For example if there is an image subfolder under your extension project workspace:
+1. Install [jai_lsp](https://github.com/Sl3dge78/jai_lsp)
+2. Add these two options :
+* `jai-lsp.command` : Command to run jai-lsp. If its in your path, it can just be "jai_lsp". If its not in your path, you need to specify the full path to it.
+* `jai-lsp.buildFile` : File to build. Can be relative to current workspace directory or absolute. 
 
-\!\[feature X\]\(images/feature-x.png\)
+Example :
+"jai-lsp.command": "/bin/jai_lsp",
+"jai-lsp.buildFile": "build.jai",
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+3. If your build file is a metaprogram you need to call a procedure during your message loop. There will be a function pointer to it in the build options in user_data_u64. Here's the procedure definition : `lsp_message :: (message : *Message)`. Please look at the server repo for more details.  
 
-## Requirements
+Example :
+``` 
+#run build();
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+build :: () {
+    set_build_options_dc( .{do_output = false} );
+    w := compiler_create_workspace("test program");
+    
+    options := get_build_options();
+    options.output_type = .EXECUTABLE;
+    
+    lsp_message : (message : *Message);
+    is_lsp := false;
+    if options.user_data_u64 {
+        lsp_message = << cast(*(*Message)) options.user_data_u64;  
+        is_lsp = true;
+    }
 
-## Extension Settings
+    set_build_options(options, w);
+    compiler_begin_intercept(w);
+    add_build_file("main.jai", w);
+    while true {
+        msg := compiler_wait_for_message();
+        if !msg continue;
+        if msg.kind == .COMPLETE break;
+        
+        if is_lsp {
+            lsp_message(msg);
+        }
+        
+    }
+    compiler_end_intercept(w);
+}
+``` 
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+The extension also adds 3 commands : 
+- Jai lsp Start : Starts the protocol.
+- Jai lsp Stop : Stops the protocol.
+- Jai lsp Restart : Restarts everything.
 
-For example:
+## Notes
+- Until the server supports workspace change, you will probably need to retart the server when changing directory.
 
-This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
 
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**

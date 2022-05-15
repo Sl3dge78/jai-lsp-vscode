@@ -42,6 +42,11 @@
 					"scope": "resource",
 					"type": "string",
 					"description": "Command to run to start jai lsp"
+				},
+				"jai-lsp.buildFile": {
+					"scope": "resource",
+					"type": "string",
+					"description": "File used to build project."
 				}
 			}
 		},
