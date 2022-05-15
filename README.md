@@ -13,8 +13,10 @@ This extension is a small extension that will run the jai-lsp server.
 * `jai-lsp.buildFile` : File to build. Can be relative to current workspace directory or absolute. 
 
 Example :
+```
 "jai-lsp.command": "/bin/jai_lsp",
 "jai-lsp.buildFile": "build.jai",
+```
 
 3. If your build file is a metaprogram you need to call a procedure during your message loop. There will be a function pointer to it in the build options in user_data_u64. Here's the procedure definition : `lsp_message :: (message : *Message)`. Please look at the server repo for more details.  
 
